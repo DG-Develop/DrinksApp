@@ -1,4 +1,4 @@
-package com.dgdevelop.tragosapp.domain
+package com.dgdevelop.tragosapp.data
 
 import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.data.model.DrinkEntity

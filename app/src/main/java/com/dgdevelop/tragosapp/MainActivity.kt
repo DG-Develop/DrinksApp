@@ -2,13 +2,10 @@ package com.dgdevelop.tragosapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.dgdevelop.tragosapp.domain.TragosDao
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint /* Punto de entrada de donde se injectaran las instancia */
 class MainActivity : AppCompatActivity() {

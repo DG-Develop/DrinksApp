@@ -1,4 +1,4 @@
-package com.dgdevelop.tragosapp.domain
+package com.dgdevelop.tragosapp.domain.service
 
 import com.dgdevelop.tragosapp.data.model.DrinkList
 import retrofit2.http.GET

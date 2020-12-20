@@ -1,4 +1,4 @@
-package com.dgdevelop.tragosapp.domain
+package com.dgdevelop.tragosapp.domain.service
 
 import androidx.room.*
 import com.dgdevelop.tragosapp.data.model.DrinkEntity

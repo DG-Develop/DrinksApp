@@ -1,7 +1,7 @@
 package com.dgdevelop.tragosapp.di
 
 import com.dgdevelop.tragosapp.data.DataSourceImpl
-import com.dgdevelop.tragosapp.domain.DataSource
+import com.dgdevelop.tragosapp.data.DataSource
 import com.dgdevelop.tragosapp.domain.Repo
 import com.dgdevelop.tragosapp.domain.RepoImpl
 import dagger.Binds

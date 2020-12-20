@@ -19,19 +19,14 @@ import com.dgdevelop.tragosapp.data.DataSourceImpl
 import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.domain.RepoImpl
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
-import com.dgdevelop.tragosapp.ui.viewmodel.VMFactory
 import com.dgdevelop.tragosapp.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
 
+@AndroidEntryPoint
 class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
 
-    private val viewModel by viewModels<MainViewModel> {
-        VMFactory(RepoImpl(DataSourceImpl(AppDatabase.getDatabase(requireActivity().applicationContext))))
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +53,6 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
                     progressBar.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
-                    Log.i("MVM", "Result: ${result.data}")
                     progressBar.visibility = View.GONE
                     rv_tragos.adapter = MainAdapter(requireContext(), result.data.toMutableList(), this)
                 }

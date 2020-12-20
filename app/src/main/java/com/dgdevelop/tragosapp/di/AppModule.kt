@@ -3,11 +3,16 @@ package com.dgdevelop.tragosapp.di
 import android.content.Context
 import androidx.room.Room
 import com.dgdevelop.tragosapp.AppDatabase
+import com.dgdevelop.tragosapp.domain.service.WebService
+import com.dgdevelop.tragosapp.utils.AppConstants.BASE_URL
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -27,4 +32,16 @@ object AppModule {
     @Singleton
     @Provides
     fun provideTragosDao(db: AppDatabase) = db.tragoDao()
+
+    @Singleton
+    @Provides
+    fun provideRetrofitInstance() = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideWebService(retrofit: Retrofit) = retrofit.create(WebService::class.java)
+
 }

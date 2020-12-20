@@ -1,4 +1,4 @@
-package com.dgdevelop.tragosapp.ui
+package com.dgdevelop.tragosapp.ui.cocktaildetails
 
 import android.os.Bundle
 import android.util.Log
@@ -9,22 +9,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import com.dgdevelop.tragosapp.AppDatabase
 import com.dgdevelop.tragosapp.R
-import com.dgdevelop.tragosapp.data.DataSourceImpl
 import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.data.model.DrinkEntity
-import com.dgdevelop.tragosapp.domain.RepoImpl
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
-import com.dgdevelop.tragosapp.ui.viewmodel.VMFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tragos_detalle.*
 
+@AndroidEntryPoint
 class TragosDetalleFragment : Fragment() {
 
-    private val viewModel by activityViewModels<MainViewModel>{
-        VMFactory(RepoImpl(DataSourceImpl(AppDatabase.getDatabase(requireActivity().applicationContext))))
-    }
-
+    private val viewModel by activityViewModels<MainViewModel>()
     private lateinit var drink: Drink
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,11 +45,11 @@ class TragosDetalleFragment : Fragment() {
         Glide.with(requireContext()).load(drink.imagen).centerCrop().into(ivTrago)
         tvTragoTitle.text = drink.nombre
         tvTragoDesc.text = drink.descripcion
-        if(drink.hasAlcohol == "Non_Alcoholic"){
+       /* if(drink.hasAlcohol == "Non_Alcoholic"){
             tvHasAlcohol.text = "Bebida sin alcohol"
         }else{
             tvHasAlcohol.text = "Bebida con alcohol"
-        }
+        }*/
 
         fabBtnSave.setOnClickListener {
             viewModel.guardarTrago(DrinkEntity(
