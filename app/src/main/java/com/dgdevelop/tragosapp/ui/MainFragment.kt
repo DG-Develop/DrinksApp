@@ -1,32 +1,31 @@
 package com.dgdevelop.tragosapp.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.dgdevelop.tragosapp.AppDatabase
 import com.dgdevelop.tragosapp.R
-import com.dgdevelop.tragosapp.data.DataSourceImpl
 import com.dgdevelop.tragosapp.data.model.Drink
-import com.dgdevelop.tragosapp.domain.RepoImpl
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
 import com.dgdevelop.tragosapp.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
 
 @AndroidEntryPoint
-class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
+class MainFragment : Fragment(), MainAdapter.OnTragoClickListener {
 
     private val viewModel by viewModels<MainViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,23 +40,35 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
         setupRecyclerView()
         setupSearchView()
         setupObservers()
-        btnFavorite.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_favoritosFragment)
-        }
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         viewModel.fetchTragosList.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
+                    empty_container.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
                     progressBar.visibility = View.GONE
-                    rv_tragos.adapter = MainAdapter(requireContext(), result.data.toMutableList(), this)
+                    if (result.data.toMutableList().isEmpty()) {
+                        empty_container.visibility = View.VISIBLE
+                        /* Este return es un retorno locar al llamado de la funcion lambda, es decir
+                        * al Observer, un ejemplo mas claro seria el siguiente:
+                        * fun foo() {
+                            listOf(1, 2, 3, 4, 5).forEach {
+                            if (it == 3) return@forEach // local return to the caller of the lambda, i.e. the forEach loop
+                                print(it)
+                            }
+                            print(" done with implicit label")
+                          } */
+                        return@Observer
+                    }
+                    empty_container.visibility = View.GONE
+                    rv_tragos.adapter =
+                        MainAdapter(requireContext(), result.data.toMutableList(), this)
                 }
                 is Resource.Failure -> {
-                    Log.i("MVM", "Fallo")
                     progressBar.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),
@@ -69,9 +80,9 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
         })
     }
 
-    private fun setupSearchView(){
+    private fun setupSearchView() {
         /* Configurando el searchview */
-        sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             /* Cuando se envia lo que esta en el text */
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.setTrago(query!!)
@@ -83,6 +94,21 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener{
                 return false
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.favoritos ->{
+                findNavController().navigate(R.id.action_mainFragment_to_favoritosFragment)
+                false
+            }
+            else -> false
+        }
     }
 
     override fun onTragoClick(drink: Drink, position: Int) {

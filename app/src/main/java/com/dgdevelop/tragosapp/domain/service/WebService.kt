@@ -11,5 +11,5 @@ interface WebService {
     *  pero es lo mismo que poner la letra s en una Query y pasarle valor por un strin
     * */
     @GET("search.php")
-    suspend fun getTragoByName(@Query(value = "s") tragoName: String): DrinkList
+    suspend fun getTragoByName(@Query(value = "s") tragoName: String): DrinkList?
 }

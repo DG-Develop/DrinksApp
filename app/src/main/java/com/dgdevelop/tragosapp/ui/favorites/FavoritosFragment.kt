@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dgdevelop.tragosapp.R
 import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.data.model.DrinkEntity
-import com.dgdevelop.tragosapp.data.model.asDrinkList
 import com.dgdevelop.tragosapp.ui.MainAdapter
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
 import com.dgdevelop.tragosapp.vo.Resource
@@ -41,12 +40,12 @@ class FavoritosFragment : Fragment(), MainAdapter.OnTragoClickListener {
     }
 
     private fun setupObservers() {
-        viewModel.getTragoFavoritos.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.getTragoFavoritos().observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
                 }
                 is Resource.Success -> {
-                    val lista = result.data.asDrinkList()
+                    val lista = result.data
 
                     adapter = MainAdapter(requireContext(), lista, this)
                     rvTragosFavoritos.adapter = adapter

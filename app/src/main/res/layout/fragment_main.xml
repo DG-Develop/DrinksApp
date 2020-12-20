@@ -8,16 +8,38 @@
     android:gravity="center"
     android:orientation="vertical">
 
-   <Button
-       android:id="@+id/btnFavorite"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="ir a favoritos"/>
-
-   <androidx.appcompat.widget.SearchView
-      android:id="@+id/sv"
+   <LinearLayout
+       android:id="@+id/ll3"
        android:layout_width="match_parent"
-       android:layout_height="wrap_content"/>
+       android:layout_height="wrap_content"
+       android:background="#fafafa"
+       android:layout_gravity="center"
+       android:orientation="vertical"
+       android:padding="10dp">
+
+      <androidx.cardview.widget.CardView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="5dp"
+          app:cardCornerRadius="20dp">
+
+         <SearchView
+             android:id="@+id/sv"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:iconifiedByDefault="false"
+             android:queryHint="Search cocktail recipe"
+             app:queryBackground="@android:color/transparent"
+             android:background="#FFFFFF"/>
+
+      </androidx.cardview.widget.CardView>
+
+   </LinearLayout>
+
+
+   <include android:id="@+id/empty_container"
+       android:visibility="gone"
+       layout="@layout/empty_container"/>
    
    <RelativeLayout
        android:id="@+id/progressBar"

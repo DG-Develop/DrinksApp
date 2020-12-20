@@ -2,6 +2,7 @@ package com.dgdevelop.tragosapp.data
 
 import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.data.model.DrinkEntity
+import com.dgdevelop.tragosapp.data.model.asDrinkList
 import com.dgdevelop.tragosapp.domain.service.TragosDao
 import com.dgdevelop.tragosapp.domain.service.WebService
 import com.dgdevelop.tragosapp.vo.Resource
@@ -13,15 +14,15 @@ class DataSourceImpl @Inject constructor(
 ): DataSource {
 
     override suspend fun getTragoByName(tragoName: String): Resource<List<Drink>>{
-        return Resource.Success(webService.getTragoByName(tragoName).drinkList)
+        return Resource.Success(webService.getTragoByName(tragoName)?.drinkList?: listOf())
     }
 
     override suspend fun insertTragoIntoRoom(trago: DrinkEntity){
         tragosDao.insertFavorite(trago)
     }
 
-    override suspend fun getTragosFavoritos(): Resource<List<DrinkEntity>> =
-        Resource.Success(tragosDao.getAllFavoriteDrinks())
+    override suspend fun getTragosFavoritos(): Resource<MutableList<Drink>> =
+        Resource.Success(tragosDao.getAllFavoriteDrinks().asDrinkList())
 
     override suspend fun deleteDrink(drink: DrinkEntity) = tragosDao.deleteDrink(drink)
 }

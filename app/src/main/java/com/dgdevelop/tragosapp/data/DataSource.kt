@@ -6,11 +6,13 @@ import com.dgdevelop.tragosapp.vo.Resource
 
 interface DataSource {
 
-    suspend fun getTragoByName(tragoName: String): Resource<List<Drink>>
+    /* Esta funcion estara llendo a buscar datos en la api por lo que puede que haya datos
+    *  incorrectos y por ende traiga datos nulos por eso marcamos el Null safety en esta funcion*/
+    suspend fun getTragoByName(tragoName: String): Resource<List<Drink>>?
 
     suspend fun insertTragoIntoRoom(trago: DrinkEntity)
 
-    suspend fun getTragosFavoritos(): Resource<List<DrinkEntity>>
+    suspend fun getTragosFavoritos(): Resource<MutableList<Drink>>
 
     suspend fun deleteDrink(drink: DrinkEntity)
 }
