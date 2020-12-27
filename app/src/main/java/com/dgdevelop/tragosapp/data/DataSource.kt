@@ -12,7 +12,7 @@ interface DataSource {
 
     suspend fun insertTragoIntoRoom(trago: DrinkEntity)
 
-    suspend fun getTragosFavoritos(): Resource<MutableList<Drink>>
+    suspend fun getTragosFavoritos(): Resource<List<Drink>>
 
     suspend fun deleteDrink(drink: DrinkEntity)
 }

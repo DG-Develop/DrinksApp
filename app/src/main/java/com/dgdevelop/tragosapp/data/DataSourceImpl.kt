@@ -21,7 +21,7 @@ class DataSourceImpl @Inject constructor(
         tragosDao.insertFavorite(trago)
     }
 
-    override suspend fun getTragosFavoritos(): Resource<MutableList<Drink>> =
+    override suspend fun getTragosFavoritos(): Resource<List<Drink>> =
         Resource.Success(tragosDao.getAllFavoriteDrinks().asDrinkList())
 
     override suspend fun deleteDrink(drink: DrinkEntity) = tragosDao.deleteDrink(drink)

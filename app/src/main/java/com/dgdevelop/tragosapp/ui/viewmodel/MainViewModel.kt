@@ -1,16 +1,13 @@
 package com.dgdevelop.tragosapp.ui.viewmodel
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.dgdevelop.tragosapp.data.model.Drink
 import com.dgdevelop.tragosapp.data.model.DrinkEntity
 import com.dgdevelop.tragosapp.domain.Repo
 import com.dgdevelop.tragosapp.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 class MainViewModel @ViewModelInject constructor(private val repo:Repo): ViewModel(){
 
@@ -63,9 +60,12 @@ class MainViewModel @ViewModelInject constructor(private val repo:Repo): ViewMod
         }
     }
 
-    fun deleteDrink(drink: DrinkEntity){
-        viewModelScope.launch {
-            repo.deleteDrink(drink)
+    fun deleteDrink(drink: DrinkEntity) = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        emit(Resource.Loading())
+        try {
+            emit(repo.deleteDrink(drink))
+        }catch (e: Exception){
+            emit(Resource.Failure(e))
         }
     }
 }

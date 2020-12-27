@@ -11,14 +11,15 @@ class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
     override suspend fun getTragosList(tragoName: String): Resource<List<Drink>> =
         dataSource.getTragoByName(tragoName)!!
 
-    override suspend fun getTragosFavoritos(): Resource<MutableList<Drink>> =
+    override suspend fun getTragosFavoritos(): Resource<List<Drink>> =
         dataSource.getTragosFavoritos()
 
     override suspend fun insertTrago(trago: DrinkEntity) {
         dataSource.insertTragoIntoRoom(trago)
     }
 
-    override suspend fun deleteDrink(drink: DrinkEntity) {
+    override suspend fun deleteDrink(drink: DrinkEntity): Resource<List<Drink>> {
         dataSource.deleteDrink(drink)
+        return getTragosFavoritos()
     }
 }
