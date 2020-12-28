@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dgdevelop.tragosapp.R
 import com.dgdevelop.tragosapp.base.BaseViewHolder
-import com.dgdevelop.tragosapp.data.model.Drink
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
-import com.dgdevelop.tragosapp.data.model.asDrinkEntity
+import com.dgdevelop.tragosapp.data.model.*
 import kotlinx.android.synthetic.main.tragos_row.view.*
 
 
@@ -19,14 +17,14 @@ class FavoritesAdapter(
     private val itemClickListener: OnCocktailClickListener
 ): RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    private var cocktailList = listOf<Drink>()
+    private var cocktailList = listOf<Cocktail>()
 
     interface OnCocktailClickListener{
-        fun onCocktailClick(drink: Drink, position: Int)
-        fun onCocktailDeleteLongClick(drink: DrinkEntity, position: Int)
+        fun onCocktailClick(cocktail: Cocktail, position: Int)
+        fun onCocktailDeleteLongClick(favorites: FavoritesEntity, position: Int)
     }
 
-    fun setCocktailList(cocktailList: List<Drink>){
+    fun setCocktailList(cocktailList: List<Cocktail>){
         this.cocktailList = cocktailList
         notifyDataSetChanged()
     }
@@ -44,14 +42,14 @@ class FavoritesAdapter(
 
     override fun getItemCount(): Int = cocktailList.size
 
-    private inner class MainViewHolder(itemView: View): BaseViewHolder<Drink>(itemView){
-        override fun bind(item: Drink, position: Int) {
-            Glide.with(context).load(item.imagen).centerCrop().into(itemView.img_trago)
-            itemView.txt_titulo.text = item.nombre
-            itemView.txt_descripcion.text = item.descripcion
+    private inner class MainViewHolder(itemView: View): BaseViewHolder<Cocktail>(itemView){
+        override fun bind(item: Cocktail, position: Int) {
+            Glide.with(context).load(item.image).centerCrop().into(itemView.img_cocktail)
+            itemView.txt_title.text = item.name
+            itemView.txt_description.text = item.description
 
             itemView.setOnLongClickListener {
-                itemClickListener.onCocktailDeleteLongClick(item.asDrinkEntity(),position)
+                itemClickListener.onCocktailDeleteLongClick(item.asFavoriteEntity(),position)
                 return@setOnLongClickListener true
             }
 

@@ -2,10 +2,11 @@ package com.dgdevelop.tragosapp
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
-import com.dgdevelop.tragosapp.domain.service.TragosDao
+import com.dgdevelop.tragosapp.data.model.CocktailEntity
+import com.dgdevelop.tragosapp.data.local.CocktailDao
+import com.dgdevelop.tragosapp.data.model.FavoritesEntity
 
-@Database(entities = [DrinkEntity::class], version = 1)
+@Database(entities = [CocktailEntity::class, FavoritesEntity::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun  tragoDao() : TragosDao
+    abstract fun  cocktailDao() : CocktailDao
 }

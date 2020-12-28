@@ -2,25 +2,27 @@ package com.dgdevelop.tragosapp.ui.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
+import com.dgdevelop.tragosapp.data.model.CocktailEntity
+import com.dgdevelop.tragosapp.data.model.FavoritesEntity
 import com.dgdevelop.tragosapp.domain.Repo
 import com.dgdevelop.tragosapp.vo.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MainViewModel @ViewModelInject constructor(private val repo:Repo): ViewModel(){
 
-    private val tragosData = MutableLiveData<String>()
+    private val mutableCocktailName = MutableLiveData<String>()
 
     /* Funcion que setea el nombre del trago a buscar*/
-    fun setTrago(tragoName: String){
-        tragosData.value = tragoName
+    fun setCocktail(cocktailName: String){
+        mutableCocktailName.value = cocktailName
     }
 
     /* Por defecto en la lista de busqueda solo apareceran los tragos de margarita */
     init {
-        setTrago("margarita")
+        setCocktail("margarita")
     }
 
     /* En este metodo fetchTragosList lo que hace es buscar una lista de tragos dependiendo de lo
@@ -32,11 +34,13 @@ class MainViewModel @ViewModelInject constructor(private val repo:Repo): ViewMod
     *  para que nos emita la lista de resultados pasandole como resultado el valor que contiene
     *  el MutableLiveData de tragosData que en este caso es un string
     * */
-    val fetchTragosList = tragosData.distinctUntilChanged().switchMap {nombreTrago ->
+    val fetchCocktailList = mutableCocktailName.distinctUntilChanged().switchMap { cocktailName ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(Resource.Loading())
             try {
-                emit(repo.getTragosList(nombreTrago))
+                repo.getCocktailList(cocktailName).collect {
+                    emit(it)
+                }
             }catch (e: Exception){
                 emit(Resource.Failure(e))
             }
@@ -45,25 +49,25 @@ class MainViewModel @ViewModelInject constructor(private val repo:Repo): ViewMod
     /* viewModelScope sirve para cuando ya no se destruya el activity o fragment que utilice esta
     * funcion, limpie todo el scope que maneje dentro de el, tambien nos sirve para ejecutar
     * corutinas con el .launch y asi evitar crear bloques de suspenciones en la UI*/
-    fun guardarTrago(trago: DrinkEntity){
+    fun saveCocktail(cocktail: FavoritesEntity){
         viewModelScope.launch {
-            repo.insertTrago(trago)
+            repo.saveCocktail(cocktail)
         }
     }
 
-    fun getTragoFavoritos() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+    fun getFavoriteCocktails() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         emit(Resource.Loading())
         try {
-            emit(repo.getTragosFavoritos())
+            emit(repo.getFavoriteCocktails())
         }catch (e: Exception){
             emit(Resource.Failure(e))
         }
     }
 
-    fun deleteDrink(drink: DrinkEntity) = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+    fun deleteCocktail(cocktail: FavoritesEntity) = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         emit(Resource.Loading())
         try {
-            emit(repo.deleteDrink(drink))
+            emit(repo.deleteCocktail(cocktail))
         }catch (e: Exception){
             emit(Resource.Failure(e))
         }

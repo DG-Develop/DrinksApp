@@ -10,24 +10,25 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.dgdevelop.tragosapp.R
-import com.dgdevelop.tragosapp.data.model.Drink
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
+import com.dgdevelop.tragosapp.data.model.Cocktail
+import com.dgdevelop.tragosapp.data.model.CocktailEntity
+import com.dgdevelop.tragosapp.data.model.FavoritesEntity
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tragos_detalle.*
 
 @AndroidEntryPoint
-class TragosDetalleFragment : Fragment() {
+class CocktailDetailFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
-    private lateinit var drink: Drink
+    private lateinit var cocktail: Cocktail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            drink = it.getParcelable("drink")!!
+            cocktail = it.getParcelable("cocktail")!!
             // Si usas data class puedes ver todo el contenido de la clase
-            Log.d("Detalles_frag", "$drink")
+            Log.d("Detalles_frag", "$cocktail")
         }
 
     }
@@ -42,20 +43,26 @@ class TragosDetalleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Glide.with(requireContext()).load(drink.imagen).centerCrop().into(ivTrago)
-        tvTragoTitle.text = drink.nombre
-        tvTragoDesc.text = drink.descripcion
-       /* if(drink.hasAlcohol == "Non_Alcoholic"){
-            tvHasAlcohol.text = "Bebida sin alcohol"
-        }else{
-            tvHasAlcohol.text = "Bebida con alcohol"
-        }*/
+        Glide.with(requireContext()).load(cocktail.image).centerCrop().into(ivCocktail)
+        tvCocktailTitle.text = cocktail.name
+        tvCocktailDesc.text = cocktail.description
+        /* if(cocktail.hasAlcohol == "Non_Alcoholic"){
+             tvHasAlcohol.text = "Bebida sin alcohol"
+         }else{
+             tvHasAlcohol.text = "Bebida con alcohol"
+         }*/
 
         fabBtnSave.setOnClickListener {
-            viewModel.guardarTrago(DrinkEntity(
-                drink.tragoId, drink.imagen, drink.nombre, drink.descripcion, drink.hasAlcohol
-            ))
-            Toast.makeText(requireContext(), "Se guardo el trago a favoritos", Toast.LENGTH_SHORT)
+            viewModel.saveCocktail(
+                FavoritesEntity(
+                    cocktail.cocktailId,
+                    cocktail.image,
+                    cocktail.name,
+                    cocktail.description,
+                    cocktail.hasAlcohol
+                )
+            )
+            Toast.makeText(requireContext(), "Cocktail saved to favorites", Toast.LENGTH_SHORT)
                 .show()
         }
 

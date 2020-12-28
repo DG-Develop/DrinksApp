@@ -1,25 +1,30 @@
 package com.dgdevelop.tragosapp.domain
 
 import com.dgdevelop.tragosapp.data.DataSource
-import com.dgdevelop.tragosapp.data.model.Drink
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
+import com.dgdevelop.tragosapp.data.DefaultCocktailDataSource
+import com.dgdevelop.tragosapp.data.model.Cocktail
+import com.dgdevelop.tragosapp.data.model.CocktailEntity
+import com.dgdevelop.tragosapp.data.model.FavoritesEntity
 import com.dgdevelop.tragosapp.vo.Resource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
+class RepoImpl @Inject constructor(private val defaultCocktailDataSource: DefaultCocktailDataSource) : Repo {
 
-    override suspend fun getTragosList(tragoName: String): Resource<List<Drink>> =
-        dataSource.getTragoByName(tragoName)!!
+    @ExperimentalCoroutinesApi
+    override suspend fun getCocktailList(cocktailName: String): Flow<Resource<List<Cocktail>>?> =
+        defaultCocktailDataSource.getCocktailByName(cocktailName)
 
-    override suspend fun getTragosFavoritos(): Resource<List<Drink>> =
-        dataSource.getTragosFavoritos()
+    override suspend fun getFavoriteCocktails(): Resource<List<Cocktail>> =
+        defaultCocktailDataSource.getFavoritesCocktails()
 
-    override suspend fun insertTrago(trago: DrinkEntity) {
-        dataSource.insertTragoIntoRoom(trago)
+    override suspend fun saveCocktail(cocktail: FavoritesEntity)  {
+        defaultCocktailDataSource.saveFavoriteCocktail(cocktail)
     }
 
-    override suspend fun deleteDrink(drink: DrinkEntity): Resource<List<Drink>> {
-        dataSource.deleteDrink(drink)
-        return getTragosFavoritos()
+    override suspend fun deleteCocktail(cocktail: FavoritesEntity): Resource<List<Cocktail>> {
+        defaultCocktailDataSource.deleteCocktail(cocktail)
+        return getFavoriteCocktails()
     }
 }

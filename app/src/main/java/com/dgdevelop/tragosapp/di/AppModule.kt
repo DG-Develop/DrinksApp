@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.dgdevelop.tragosapp.AppDatabase
 import com.dgdevelop.tragosapp.domain.service.WebService
 import com.dgdevelop.tragosapp.utils.AppConstants.BASE_URL
+import com.dgdevelop.tragosapp.utils.AppConstants.TABLE_NAME
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -26,12 +27,13 @@ object AppModule {
     @Singleton /* Provee una instancia unica de este proveedor */
     @Provides /* Metodo que provee de una instancia */
     fun provideRoomInstance(@ApplicationContext context: Context) = Room
-        .databaseBuilder(context, AppDatabase::class.java, "tabla_tragos")
+        .databaseBuilder(context, AppDatabase::class.java, TABLE_NAME)
+        .fallbackToDestructiveMigration()
         .build() /* Conexion con Room */
 
     @Singleton
     @Provides
-    fun provideTragosDao(db: AppDatabase) = db.tragoDao()
+    fun provideTragosDao(db: AppDatabase) = db.cocktailDao()
 
     @Singleton
     @Provides

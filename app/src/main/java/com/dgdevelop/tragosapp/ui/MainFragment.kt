@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.dgdevelop.tragosapp.R
-import com.dgdevelop.tragosapp.data.model.Drink
+import com.dgdevelop.tragosapp.data.model.Cocktail
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
 import com.dgdevelop.tragosapp.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +45,7 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener {
     }
 
     private fun setupObservers() {
-        viewModel.fetchTragosList.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.fetchCocktailList.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
                     empty_container.visibility = View.GONE
@@ -86,7 +86,7 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener {
         sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             /* Cuando se envia lo que esta en el text */
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.setTrago(query!!)
+                viewModel.setCocktail(query!!)
                 return false
             }
 
@@ -112,9 +112,9 @@ class MainFragment : Fragment(), MainAdapter.OnTragoClickListener {
         }
     }
 
-    override fun onCocktailClick(drink: Drink, position: Int) {
+    override fun onCocktailClick(cocktail: Cocktail, position: Int) {
         val bundle = Bundle()
-        bundle.putParcelable("drink", drink)
+        bundle.putParcelable("cocktail", cocktail)
         /* En este apartado en lugar de mandarlo directo a la siguiente pantalla lo que se hace es
         * mandarlo primero a que vaya a la animacion que se tienen puesta para la siguiente
         * transicion de pantalla */

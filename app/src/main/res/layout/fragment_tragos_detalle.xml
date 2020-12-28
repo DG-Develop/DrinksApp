@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.cocktaildetails.TragosDetalleFragment">
+    tools:context=".ui.cocktaildetails.CocktailDetailFragment">
 
     <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/ivTrago"
+        android:id="@+id/ivCocktail"
         android:layout_width="match_parent"
         android:layout_height="300dp"/>
 
@@ -19,7 +19,7 @@
         android:tint="#ffffff"/>
 
     <TextView
-        android:id="@+id/tvTragoTitle"
+        android:id="@+id/tvCocktailTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -36,7 +36,7 @@
         tools:text="Tragos sin alcohol"/>
 
     <TextView
-        android:id="@+id/tvTragoDesc"
+        android:id="@+id/tvCocktailDesc"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

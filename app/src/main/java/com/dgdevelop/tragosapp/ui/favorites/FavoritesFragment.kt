@@ -12,16 +12,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dgdevelop.tragosapp.R
-import com.dgdevelop.tragosapp.data.model.Drink
-import com.dgdevelop.tragosapp.data.model.DrinkEntity
-import com.dgdevelop.tragosapp.ui.MainAdapter
+import com.dgdevelop.tragosapp.data.model.Cocktail
+import com.dgdevelop.tragosapp.data.model.CocktailEntity
+import com.dgdevelop.tragosapp.data.model.FavoritesEntity
 import com.dgdevelop.tragosapp.ui.viewmodel.MainViewModel
 import com.dgdevelop.tragosapp.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_favoritos.*
 
 @AndroidEntryPoint
-class FavoritosFragment : Fragment(), FavoritesAdapter.OnCocktailClickListener {
+class FavoritesFragment : Fragment(), FavoritesAdapter.OnCocktailClickListener {
 
     private val viewModel by activityViewModels<MainViewModel>()
     private lateinit var favoriteAdapter: FavoritesAdapter
@@ -46,7 +46,7 @@ class FavoritosFragment : Fragment(), FavoritesAdapter.OnCocktailClickListener {
     }
 
     private fun setupObservers() {
-        viewModel.getTragoFavoritos().observe(viewLifecycleOwner, Observer { result ->
+        viewModel.getFavoriteCocktails().observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
                 }
@@ -75,19 +75,19 @@ class FavoritosFragment : Fragment(), FavoritesAdapter.OnCocktailClickListener {
         rvTragosFavoritos.adapter = favoriteAdapter
     }
 
-    override fun onCocktailClick(drink: Drink, position: Int) {
+    override fun onCocktailClick(cocktail: Cocktail, position: Int) {
         val bundle = Bundle()
-        bundle.putParcelable("drink", drink)
+        bundle.putParcelable("cocktail", cocktail)
         findNavController().navigate(R.id.action_favoritosFragment_to_tragosDetalleFragment, bundle)
     }
 
-    override fun onCocktailDeleteLongClick(drink: DrinkEntity, position: Int) {
-        viewModel.deleteDrink(drink).observe(viewLifecycleOwner, Observer { result ->
+    override fun onCocktailDeleteLongClick(favorites: FavoritesEntity, position: Int) {
+        viewModel.deleteCocktail(favorites).observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
                 }
                 is Resource.Success -> {
-                    Toast.makeText(requireContext(), "Drink deleted!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Cocktail deleted!", Toast.LENGTH_SHORT).show()
                     favoriteAdapter.setCocktailList(result.data)
                 }
                 is Resource.Failure -> {

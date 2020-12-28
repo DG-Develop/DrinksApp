@@ -1,11 +1,14 @@
 package com.dgdevelop.tragosapp.di
 
-import com.dgdevelop.tragosapp.data.DataSourceImpl
+import com.dgdevelop.tragosapp.data.DefaultCocktailDataSource
 import com.dgdevelop.tragosapp.data.DataSource
+import com.dgdevelop.tragosapp.data.local.LocalDataSourceImpl
+import com.dgdevelop.tragosapp.data.remote.RemoteDataSourceImpl
 import com.dgdevelop.tragosapp.domain.Repo
 import com.dgdevelop.tragosapp.domain.RepoImpl
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 
@@ -25,5 +28,17 @@ abstract class ActivityModule {
     abstract  fun bindRepoImpl(repoImpl: RepoImpl): Repo
 
     @Binds
-    abstract  fun bindDataSourceImpl(dataSourceImpl: DataSourceImpl): DataSource
+    abstract  fun bindRemoteDataSourceImpl(remoteDataSourceImpl: RemoteDataSourceImpl): DataSource
+
+    @Binds
+    abstract fun bindLocalDataSourceImpl(localDataSourceImpl: LocalDataSourceImpl): DataSource
+}
+
+@Module
+@InstallIn(ActivityRetainedComponent::class)
+internal object MyActivityModule{
+
+    @Provides
+    fun provideDefaultCocktailDataSource(networkCocktailDataSourceImpl: RemoteDataSourceImpl, localDataSourceImpl: LocalDataSourceImpl) =
+        DefaultCocktailDataSource(networkCocktailDataSourceImpl, localDataSourceImpl)
 }
